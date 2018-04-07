@@ -9,13 +9,17 @@ function tp_custom_form($form, &$form_state) {
     '#type' => 'select',
     '#title' => t('Where do you want to go?'),
     '#default_value' => " ",
-    '#options' => tp_get_destination_list()
+    '#options' => tp_get_destination_list(),
+    '#ajax' => array(
+      'callback' => 'ajax_desination_redirect_callback',
+      'wrapper' => 'checkboxes-div',
+      'method' => 'onchange',
+      'effect' => 'fade'
+    ),
   );
-  $form['submit'] = array(
-		'#type' => 'submit',
-		'#value' => 'Search',
-  );
+
   return $form;
+
 }
 
 /**
@@ -23,18 +27,24 @@ function tp_custom_form($form, &$form_state) {
 *
 */
 
-function tp_custom_form_submit($form, &$form_state){
+function ajax_desination_redirect_callback($form, &$form_state){
 	
+	ctools_include('ajax');
+
 	$dest_code = explode('-',$form_state['values']['tp_search_destination']);
 	if ($dest_code[0] == 81) {
-		drupal_goto('holidays/india/' . $dest_code[1]);
+		$path = 'holidays/india/' . $dest_code[1];
 	}
 	else{
 		if ($dest_code[0] == 82) {
-			drupal_goto('holidays/international/' . $dest_code[1]);
+			$path = 'holidays/international/' . $dest_code[1];
 		}
 	}
+	
+	$commands[] = ctools_ajax_command_redirect($path); // ajax command to redirect on select value change
+	return array('#type' => 'ajax', '#commands' => $commands);
 }
+
 
 /**
 * Function to get list of 
