@@ -1,0 +1,110 @@
+@media only screen and (min-width: 740px) and (orientation:landscape) {
+  .node-product-type .field-name-field-product form.commerce-add-to-cart label{
+    float: none !important;
+    width: auto;
+  }
+  .node-product-type .field-type-commerce-product-reference form.commerce-add-to-cart .attribute-widgets .form-item.form-type-radio{
+    display: inline-block;
+    vertical-align: top;
+  }
+  .node-product-type .field-type-commerce-product-reference form.commerce-add-to-cart label:after{
+    content: '' !important;
+  }
+}
+
+.node-product-type .field-type-commerce-product-reference form.commerce-add-to-cart .form-submit,
+.node-product-type .field-type-commerce-product-reference form.commerce-add-to-cart .form-item.form-item-quantity{
+  display: none;
+}
+
+.node-product-type .field-type-commerce-product-reference form.commerce-add-to-cart,
+.node-product-type .field-type-commerce-product-reference{
+  background: none !important;
+  padding: 0 !important;
+  margin : 0 !important;
+}
+
+.field-name-field-hp-services .field-item,
+  .node-field-services .field-item{
+    display: inline-block;
+    padding: 0 10px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    margin: 5px;
+  }
+
+.f16{
+  font-size:16px;
+  line-height: 20px;
+}
+
+.f12{
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.f24{
+  font-size: 24px;
+  line-height: 28px;
+}
+
+.fw09{
+  font-weight: 900;
+}
+
+.fw06{
+  font-weight: 600;
+}
+
+.pfc3{
+  color:#3e3e3e;
+}
+
+.pfc4{
+  color: #b2b2b2;
+}
+
+.pfc5{
+  color: #4caf50; /* green */
+}
+
+div.row.tp-product-item{
+  margin: 0;
+}
+.tp-product-item h2{
+  margin: 8px 0;
+}
+
+.tp-product-item{
+  font-size: 12px;
+}
+
+.tp-item-node-link a,
+.tp-item-node-link a:hover
+{
+    color: #ffffff;
+      font-size: 16px;
+      background: #fe5246;
+      padding: 12px;
+      text-align: center;
+      text-decoration: none;
+      float: right;
+      width: 100%;
+  }
+
+.pad-0{
+    padding: 0 !important;
+  }
+
+.field-name-commerce-price
+{
+  font-size: 24px;
+  font-weight: 600;
+  color: #4caf40;
+  line-height: 15px;
+}
+
+.commerce-add-to-cart .form-select{
+  width:65%;
+  padding: 5px 10px;
+}

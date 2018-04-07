@@ -1,0 +1,104 @@
+<?php
+
+/**
+* Implements hook_form() 
+**/
+
+function tp_custom_form($form, &$form_state) {
+  $form['tp_search_destination'] = array(
+    '#type' => 'select',
+    '#title' => t('Where do you want to go?'),
+    '#default_value' => " ",
+    '#options' => tp_get_destination_list()
+  );
+  $form['submit'] = array(
+		'#type' => 'submit',
+		'#value' => 'Search',
+  );
+  return $form;
+}
+
+/**
+* Implements form submit 
+*
+*/
+
+function tp_custom_form_submit($form, &$form_state){
+	
+	$dest_code = explode('-',$form_state['values']['tp_search_destination']);
+	if ($dest_code[0] == 81) {
+		drupal_goto('holidays/india/' . $dest_code[1]);
+	}
+	else{
+		if ($dest_code[0] == 82) {
+			drupal_goto('holidays/international/' . $dest_code[1]);
+		}
+	}
+}
+
+/**
+* Function to get list of 
+* all destinations
+*/
+
+function tp_get_destination_list(){
+	$tp_destinations = array('_none_' => 'Select a destination');
+
+	$tp_destination_types = taxonomy_get_tree(taxonomy_vocabulary_machine_name_load('type_of_destination')->vid);
+	$tp_india_list = taxonomy_get_tree(taxonomy_vocabulary_machine_name_load('destination_state')->vid);
+	$tp_international_list = taxonomy_get_tree(taxonomy_vocabulary_machine_name_load('destination_countries')->vid);
+
+	foreach ($tp_destination_types as $term) {
+		if($term->tid == 81){
+			foreach ($tp_india_list as $value) {
+				$tp_destinations[$term->tid . '-' . $value->tid] = $value->name;
+			}
+		}
+		else{
+			if ($term->tid == 82) {
+				foreach ($tp_international_list as $value) {
+					$tp_destinations[$term->tid . '-' . $value->tid] = $value->name;
+				}
+			}
+		}
+	}
+
+	return $tp_destinations;
+}
+
+/**
+* Creating custom blocks
+*/
+
+/**
+* Implements hook_block_info()
+* 
+**/
+
+function tp_custom_block_info() {    
+  $blocks['tp_home_search'] = array(
+    // info: The name of the block.
+    'info' => t('Travelopedia Home Search'),
+  );
+
+  return $blocks;
+}
+
+/**
+* Implements hook_block_view()
+*
+**/
+
+function tp_custom_block_view($delta = '') {
+	switch ($delta) {
+		case 'tp_home_search':
+			$block['subject'] = t('Travelopedia Home Page Search');
+			$block['content'] = drupal_get_form('tp_custom_form');
+			break;
+		
+		default:
+			# code...
+			break;
+	}
+	return $block;
+}
