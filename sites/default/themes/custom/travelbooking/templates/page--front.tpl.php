@@ -6,7 +6,7 @@
 ?>
 <!-- The video -->
 <video autoplay muted loop id="myVideo">
-  <source src="/travelbooking/sites/default/themes/custom/travelbooking/videos/beach.mp4" type="video/mp4">
+  <source src="/sites/default/themes/custom/travelbooking/videos/beach.mp4" type="video/mp4">
 </video>
 
 <div<?php print $attributes; ?>>
@@ -17,26 +17,20 @@
   <?php if (isset($page['content'])) : ?>
     <?php print render($page['content']); ?>
   <?php endif; ?>  
-  <div class="tp_service_icons pos-absolute top-0 right-0">
-    <a href="#"><img src="/travelbooking/sites/default/themes/custom/travelbooking/images/Flight.png"/></a>
-    <a href="#"><img src="/travelbooking/sites/default/themes/custom/travelbooking/images/Bus.png"/></a>
-    <a href="#"><img src="/travelbooking/sites/default/themes/custom/travelbooking/images/Hotel.png"/></a>
+  <div class="tp_social_icons pos-absolute bottom-0 right-0">
+    <a href="#"><img src="/sites/default/themes/custom/travelbooking/images/Flight.png"/></a>
+    <a href="#"><img src="/sites/default/themes/custom/travelbooking/images/Bus.png"/></a>
+    <a href="#"><img src="/sites/default/themes/custom/travelbooking/images/Hotel.png"/></a>
   </div>
   <?php if (isset($page['footer'])) : ?>
     <?php print render($page['footer']); ?>
   <?php endif; ?>
-  <div class="tp_social_icons pos-absolute bottom-0 right-0">
-    <a href="#"><img src="/travelbooking/sites/default/themes/custom/travelbooking/images/Blog.png"/></a>
-    <a href="#"><img src="/travelbooking/sites/default/themes/custom/travelbooking/images/Facebook.png"/></a>
-    <a href="#"><img src="/travelbooking/sites/default/themes/custom/travelbooking/images/Instagram.png"/></a>
+  <div class="tp_service_icons pos-absolute top-0 right-0">
+    <a href="#"><img src="/sites/default/themes/custom/travelbooking/images/Blog.png"/></a>
+    <a href="#"><img src="/sites/default/themes/custom/travelbooking/images/Facebook.png"/></a>
+    <a href="#"><img src="/sites/default/themes/custom/travelbooking/images/Instagram.png"/></a>
   </div>
 </div>
-
-<!--div class="custom-form">
-  <?php 
-  $tp_search_form = drupal_get_form('tp_custom_form');
-  print render($tp_search_form);?>
-</div-->
 
 <style type="text/css">
   #myVideo {
@@ -95,8 +89,7 @@
   .tp_social_icons > a > img  {
     width: 50px;
   }
-  #page{
-    position: relative;
-    height: 100vh;
+  .tp_social_icons > a{
+    display: block;
   }
 </style>
