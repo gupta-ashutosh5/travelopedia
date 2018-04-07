@@ -6,7 +6,7 @@
 ?>
 <!-- The video -->
 <video autoplay muted loop id="myVideo">
-  <source src="/sites/default/themes/custom/travelbooking/videos/beach.mp4" type="video/mp4">
+  <source src="/travelbooking/sites/default/themes/custom/travelbooking/videos/beach.mp4" type="video/mp4">
 </video>
 
 <div<?php print $attributes; ?>>
@@ -17,10 +17,19 @@
   <?php if (isset($page['content'])) : ?>
     <?php print render($page['content']); ?>
   <?php endif; ?>  
-  
+  <div class="tp_service_icons pos-absolute top-0 right-0">
+    <a href="#"><img src="/travelbooking/sites/default/themes/custom/travelbooking/images/Flight.png"/></a>
+    <a href="#"><img src="/travelbooking/sites/default/themes/custom/travelbooking/images/Bus.png"/></a>
+    <a href="#"><img src="/travelbooking/sites/default/themes/custom/travelbooking/images/Hotel.png"/></a>
+  </div>
   <?php if (isset($page['footer'])) : ?>
     <?php print render($page['footer']); ?>
   <?php endif; ?>
+  <div class="tp_social_icons pos-absolute bottom-0 right-0">
+    <a href="#"><img src="/travelbooking/sites/default/themes/custom/travelbooking/images/Blog.png"/></a>
+    <a href="#"><img src="/travelbooking/sites/default/themes/custom/travelbooking/images/Facebook.png"/></a>
+    <a href="#"><img src="/travelbooking/sites/default/themes/custom/travelbooking/images/Instagram.png"/></a>
+  </div>
 </div>
 
 <!--div class="custom-form">
@@ -58,5 +67,36 @@
   }
   .ajax-progress-throbber{
     display: none !important;
+  }
+  .tp_service_icons,
+  .tp_social_icons{
+    padding: 0 3vw;
+    margin:40px 0; 
+  }
+  .top-0{
+    top:0;
+  }
+  .right-0{
+    right: 0
+  }
+  .left-0{
+    left:0;
+  }
+  .bottom-0{
+    bottom: 0;
+  }
+  .pos-absolute{
+    position: absolute;
+  }
+  .pos-relative{
+    position: relative;
+  }
+  .tp_service_icons > a > img,
+  .tp_social_icons > a > img  {
+    width: 50px;
+  }
+  #page{
+    position: relative;
+    height: 100vh;
   }
 </style>
