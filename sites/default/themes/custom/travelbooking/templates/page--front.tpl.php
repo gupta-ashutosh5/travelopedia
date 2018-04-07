@@ -6,7 +6,7 @@
 ?>
 <!-- The video -->
 <video autoplay muted loop id="myVideo">
-  <source src="/travelbooking/sites/default/themes/custom/travelbooking/videos/beach.mp4" type="video/mp4">
+  <source src="/sites/default/themes/custom/travelbooking/videos/beach.mp4" type="video/mp4">
 </video>
 
 <div<?php print $attributes; ?>>
