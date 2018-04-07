@@ -29,7 +29,7 @@
           <?php
           $tp_package_alias = drupal_get_path_alias('node/' . $node->nid);
           ?>
-          <a href="<?php echo $tp_package_alias?>" target="_blank">View Details</a> 
+          <a href="/<?php echo $tp_package_alias?>">View Details</a>  
         </div>
         
       </div>
