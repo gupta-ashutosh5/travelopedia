@@ -24,36 +24,39 @@
 </div>
 
 <!--div class="custom-form">
-	<?php 
-	$tp_search_form = drupal_get_form('tp_custom_form');
-	print render($tp_search_form);?>
+  <?php 
+  $tp_search_form = drupal_get_form('tp_custom_form');
+  print render($tp_search_form);?>
 </div-->
 
 <style type="text/css">
-	#myVideo {
+  #myVideo {
     position: fixed;
     right: 0;
     bottom: 0;
     min-width: 100%; 
     min-height: 100%;
-	}
-	.zone-content-wrapper .zone-content{
-		background-color: transparent;
-	}
-	.block-tp-custom-tp-home-search{
-		text-align: center;
+    object-fit: cover;
+  }
+  .zone-content-wrapper .zone-content{
+    background-color: transparent;
+  }
+  .block-tp-custom-tp-home-search{
+    text-align: center;
     padding: 20px;
-	}
-	.block-tp-custom-tp-home-search label{
-		display: block;
+  }
+  .block-tp-custom-tp-home-search label{
+    display: block;
     font-size: -webkit-xxx-large;
     color: #ffffff;
     font-weight: 100;
-	}
-	.block-tp-custom-tp-home-search #edit-tp-search-destination{
-		width: 48%;
+  }
+  .block-tp-custom-tp-home-search #edit-tp-search-destination{
+    width: 50%;
     font-size: 18px;
-    border-radius: 10px;
     padding: 10px;
-	}
+  }
+  .ajax-progress-throbber{
+    display: none !important;
+  }
 </style>
