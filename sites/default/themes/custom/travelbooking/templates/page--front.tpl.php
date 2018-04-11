@@ -22,17 +22,17 @@
     <?php print render($page['content']); ?>
   <?php endif; ?>  
   <div class="tp_social_icons pos-absolute bottom-0 right-0">
-    <a href="#"><img src="/sites/default/themes/custom/travelbooking/images/Flight.png"/></a>
-    <a href="#"><img src="/sites/default/themes/custom/travelbooking/images/Bus.png"/></a>
-    <a href="#"><img src="/sites/default/themes/custom/travelbooking/images/Hotel.png"/></a>
+    <a href="/flights"><img src="/sites/default/themes/custom/travelbooking/images/Flight.png"/></a>
+    <a href="/bus"><img src="/sites/default/themes/custom/travelbooking/images/Bus.png"/></a>
+    <a href="/hotel"><img src="/sites/default/themes/custom/travelbooking/images/Hotel.png"/></a>
   </div>
   <?php if (isset($page['footer'])) : ?>
     <?php print render($page['footer']); ?>
   <?php endif; ?>
   <div class="tp_service_icons pos-absolute top-0 right-0">
-    <a href="#"><img src="/sites/default/themes/custom/travelbooking/images/Blog.png"/></a>
-    <a href="#"><img src="/sites/default/themes/custom/travelbooking/images/Facebook.png"/></a>
-    <a href="#"><img src="/sites/default/themes/custom/travelbooking/images/Instagram.png"/></a>
+    <a href="/blog"><img src="/sites/default/themes/custom/travelbooking/images/Blog.png"/></a>
+    <a href="www.facebook.com"><img src="/sites/default/themes/custom/travelbooking/images/Facebook.png"/></a>
+    <a href="www.Instagram.com"><img src="/sites/default/themes/custom/travelbooking/images/Instagram.png"/></a>
   </div>
 </div>
 
