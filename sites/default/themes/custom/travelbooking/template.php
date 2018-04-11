@@ -18,4 +18,16 @@ function travelbooking_preprocess_node(&$variables) {
   if($variables['type'] == 'hotels' && $variables['view_mode'] == 'teaser') {
     $variables['theme_hook_suggestions'][] = 'node__hotels__teaser';
   }
+
+  if(arg(1) == 40) {  //For node 2
+    $variables['theme_hook_suggestions'][] =  'page__flights';
+  }
+
+  if(arg(1) == 41) {  //For node 2
+    $variables['theme_hook_suggestions'][] =  'page__bus';
+  }
+
+  if(arg(1) == 42) {  //For node 2
+    $variables['theme_hook_suggestions'][] =  'page__hotel';
+  } 
 }
