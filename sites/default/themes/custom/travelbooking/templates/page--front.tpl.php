@@ -31,8 +31,8 @@
   <?php endif; ?>
   <div class="tp_service_icons pos-absolute top-0 right-0">
     <a href="/blog"><img src="/sites/default/themes/custom/travelbooking/images/Blog.png"/></a>
-    <a href="www.facebook.com"><img src="/sites/default/themes/custom/travelbooking/images/Facebook.png"/></a>
-    <a href="www.Instagram.com"><img src="/sites/default/themes/custom/travelbooking/images/Instagram.png"/></a>
+    <a href="https://www.facebook.com"><img src="/sites/default/themes/custom/travelbooking/images/Facebook.png"/></a>
+    <a href="https://www.Instagram.com"><img src="/sites/default/themes/custom/travelbooking/images/Instagram.png"/></a>
   </div>
 </div>
 
