@@ -1,0 +1,93 @@
+<?php
+
+/**
+* Implements hook_form() 
+**/
+
+function tp_custom_form($form, &$form_state) {
+  $destinations = tp_get_destination_list();
+  $options = '';
+  foreach ($destinations as $key => $value) {
+  	$options .= '<li><a href = '. $key .'>' . $value .'</a></li>';
+  }
+  $form['tp_search_destination'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Where do you want to go?'),
+    "#attributes" => array(	 "placeholder"=> "Search destination" , "onkeyup" => "tpDestinationSearch()"),
+  );
+
+  $form['tp_destination_list'] = array(
+ 	'#type' => 'markup',
+ 	'#markup' => '<ul id=destination-list class = destination-list-wrapper>' . $options .'</ul>',
+  );
+
+  return $form;
+
+}
+
+/**
+* Function to get list of 
+* all destinations
+*/
+
+function tp_get_destination_list(){
+	$tp_destinations = array();
+
+	$tp_destination_types = taxonomy_get_tree(taxonomy_vocabulary_machine_name_load('type_of_destination')->vid);
+	$tp_india_list = taxonomy_get_tree(taxonomy_vocabulary_machine_name_load('destination_state')->vid);
+	$tp_international_list = taxonomy_get_tree(taxonomy_vocabulary_machine_name_load('destination_countries')->vid);
+
+	foreach ($tp_destination_types as $term) {
+		if($term->tid == 81){
+			foreach ($tp_india_list as $value) {
+				$tp_destinations['/holidays/india/' . $value->tid] = $value->name;
+			}
+		}
+		else{
+			if ($term->tid == 82) {
+				foreach ($tp_international_list as $value) {
+					$tp_destinations['/holidays/international/' .  $value->tid] = $value->name;
+				}
+			}
+		}
+	}
+
+	return $tp_destinations;
+}
+
+/**
+* Creating custom blocks
+*/
+
+/**
+* Implements hook_block_info()
+* 
+**/
+
+function tp_custom_block_info() {    
+  $blocks['tp_home_search'] = array(
+    // info: The name of the block.
+    'info' => t('Travelopedia Home Search'),
+  );
+
+  return $blocks;
+}
+
+/**
+* Implements hook_block_view()
+*
+**/
+
+function tp_custom_block_view($delta = '') {
+	switch ($delta) {
+		case 'tp_home_search':
+			$block['subject'] = t('Travelopedia Home Page Search');
+			$block['content'] = drupal_get_form('tp_custom_form');
+			break;
+		
+		default:
+			# code...
+			break;
+	}
+	return $block;
+}
