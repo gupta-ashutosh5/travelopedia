@@ -126,10 +126,10 @@ print render($filter_form);
     position: relative;
     top: -16px;
     display: block;
-    width: 72.5%;
+    width: 73.8%;
     z-index: 9999;
     border: 1px solid #ddd;
-    margin-left: 27.5%;
+    margin-left: 26%;
   }
   #destination-list > li{
     list-style: none;
@@ -152,5 +152,8 @@ print render($filter_form);
   }
   .view-display-products{
     margin-top:20px;
+  }
+  .tp-explore-link{
+    display: none;
   }
 </style>

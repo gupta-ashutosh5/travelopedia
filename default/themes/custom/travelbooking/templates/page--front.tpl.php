@@ -22,41 +22,41 @@
     <?php print render($page['content']); ?>
   <?php endif; ?>  
   <div class="tp_social_icons pos-absolute bottom-0 right-0">
-    <a href="#"><i class="sprite sprite-Flight"></i></a>
-    <a href="#"><i class="sprite sprite-Bus"></i></a>
-    <a href="#"><i class="sprite sprite-Hotel"></i></a>
+    <div><span>Wanna Fly?</span><a href="/flights"><i class="sprite sprite-Flight"></i></a></div>
+    <div><span >Travel by Road?</span><a href="/bus" ><i class="sprite sprite-Bus"></i></a></div>
+    <div><span >Reserve your Comfort?</span><a href="/hotel" ><i class="sprite sprite-Hotel"></i></a></div>
   </div>
   <?php if (isset($page['footer'])) : ?>
     <?php print render($page['footer']); ?>
   <?php endif; ?>
   <div class="tp_service_icons pos-absolute top-0 right-0">
-    <a href="#"><i class="sprite sprite-Blog"></i></a>
-    <a href="#"><i class="sprite sprite-FB"></i></a>
-    <a href="#"><i class="sprite sprite-Insta"></i></a>
+    <a href="/blog"><i class="sprite sprite-Blog"></i></a>
+    <a href="https://www.facebook.com"><i class="sprite sprite-FB"></i></a>
+    <a href="https://www.instagram.com"><i class="sprite sprite-Insta"></i></a>
   </div>
 </div>
 
 <style type="text/css">
-	
-	.zone-content-wrapper .zone-content{
-		background-color: transparent;
-	}
-	.block-tp-custom-tp-home-search{
-		text-align: center;
+  
+  .zone-content-wrapper .zone-content{
+    background-color: transparent;
+  }
+  .block-tp-custom-tp-home-search{
+    text-align: center;
     padding: 20px;
-	}
-	.block-tp-custom-tp-home-search label{
-		display: block;
+  }
+  .block-tp-custom-tp-home-search label{
+    display: block;
     font-size: -webkit-xxx-large;
     color: #ffffff;
     font-weight: 100;
-	}
-	.block-tp-custom-tp-home-search #edit-tp-search-destination{
-		width: 40%;
+  }
+  .block-tp-custom-tp-home-search #edit-tp-search-destination{
+    width: 40%;
     font-size: 18px;
     padding: 10px;
     height: 48px;
-	}
+  }
   .ajax-progress-throbber{
     display: none !important;
   }
@@ -118,7 +118,7 @@
     background: #ffffff;
     position: relative;
     border: none;
-    top: -16px;
+    top: -25px;
     margin: 0 auto;
   }
   #destination-list > li{
@@ -132,6 +132,27 @@
   #destination-list > li >a{
     width: 100%;
     display: block;
+  }
+  .tp_social_icons > div{
+    text-align: right;
+    color: #ffffff
+  }
+  .tp_social_icons > div > span,
+  .tp_social_icons > div > a{
+    display: inline-block;
+    margin-left:5px;
+    vertical-align: middle;
+  }
+  .tp-explore-link{
+    text-align:left;
+    width: 40%;
+    margin: 0 auto;
+    color: #ffffff;
+    margin-top: -10px;
+  }
+  .tp-explore-link > a{
+    color: #ffffff !important;
+    font-weight: 600;
   }
 </style>
 <script type="text/javascript">
@@ -160,4 +181,6 @@ function tpDestinationSearch() {
         }
     }
 }
+
+document.getElementById('myVideo').play();
 </script>
