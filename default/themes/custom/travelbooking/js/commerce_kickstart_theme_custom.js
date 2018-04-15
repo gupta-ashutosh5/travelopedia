@@ -61,4 +61,16 @@
       });
     }
   }
+
+  Drupal.behaviors.tp_custom_js = {
+    attach: function(context, settings) {
+        jQuery('#edit-tp-search-destination').keypress(
+            function(event){
+              if (event.which == '13') {
+              event.preventDefault();
+            }
+        });
+    }
+  }
+
 })(jQuery);
