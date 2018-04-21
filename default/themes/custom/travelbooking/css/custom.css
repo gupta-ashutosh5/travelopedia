@@ -16,6 +16,37 @@ body{
   }
 }
 
+
+@media only screen and (max-width: 760px) and (orientation:portrait){
+  .block-tp-custom-tp-home-search label{
+    font-size: 1.5em !important;
+  }
+  
+  .block-tp-custom-tp-home-search #edit-tp-search-destination{
+    width:100% !important;
+  }
+  .tp-explore-link{
+    width:100% !important;
+  }
+  #destination-list{
+    top:-45px !important;
+    width:100% !important;
+  }
+}
+
+@media only screen and (max-width: 760px) and (orientation:landscape){
+  .block-tp-custom-tp-home-search label{
+    font-size: 1.5em !important;
+  }
+  .block-tp-custom-tp-home-search{
+    margin-top:-15%;
+  }
+  #destination-list{
+    top:-45px;
+  }
+}
+
+
 .node-product-type .field-type-commerce-product-reference form.commerce-add-to-cart .form-submit,
 .node-product-type .field-type-commerce-product-reference form.commerce-add-to-cart .form-item.form-item-quantity{
   display: none;

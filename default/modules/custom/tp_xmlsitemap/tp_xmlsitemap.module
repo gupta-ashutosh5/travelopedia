@@ -1,0 +1,572 @@
+<?php
+
+/**
+ * @file
+ * Provides a custom sitemap for use in SST.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function tp_xmlsitemap_menu() {
+  $items = array();
+
+  $items['admin/config/search/tp_xmlsitemap'] = array(
+    'title'            => 'Travelopedia XML Sitemap',
+    'description'      => 'Helper utility to generate an initial XML sitemap.',
+    'page callback'    => 'drupal_get_form',
+    'page arguments'   => array('tp_xmlsitemap_admin_form'),
+    'access arguments' => array('administer site configuration'),
+    'type'             => MENU_NORMAL_ITEM,
+    'file'             => 'tp_xmlsitemap.admin.inc',
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_modules_enabled().
+ */
+function tp_xmlsitemap_modules_enabled($modules) {
+  if (in_array('taxonomy', $modules) && !module_exists('xmlsitemap_taxonomy')) {
+    module_enable(array('xmlsitemap_taxonomy'));
+  }
+
+  if (in_array('menu', $modules) && !module_exists('xmlsitemap_menu')) {
+    module_enable(array('xmlsitemap_menu'));
+  }
+}
+
+/**
+ * Implements hook_cron().
+ */
+function tp_xmlsitemap_cron() {
+  tp_xmlsitemap_index_links();
+}
+
+/**
+ * Implements hook_node_update().
+ */
+function tp_xmlsitemap_node_update(stdClass $node) {
+  tp_xmlsitemap_mark_sitemaps_to_be_regenerated();
+}
+
+/**
+ * Implements hook_node_type_insert().
+ */
+function tp_xmlsitemap_node_type_insert($info) {
+  // Automatically add new entity types to SST config on creation.
+  tp_xmlsitemap_add_new_config_entry('tp_xmlsitemap_saved_content_types', $info->type);
+  tp_xmlsitemap_mark_sitemaps_to_be_regenerated();
+}
+
+/**
+ * Implements hook_node_insert().
+ */
+function tp_xmlsitemap_node_insert(stdClass $node) {
+  $allowed_types = variable_get('tp_xmlsitemap_saved_content_types', array());
+  if (in_array($node->type, $allowed_types)) {
+    tp_xmlsitemap_mark_sitemaps_to_be_regenerated();
+  }
+}
+
+/**
+ * Implements hook_node_delete().
+ */
+function tp_xmlsitemap_node_delete(stdClass $node) {
+  $allowed_types = variable_get('tp_xmlsitemap_saved_content_types', array());
+  if (in_array($node->type, $allowed_types)) {
+    tp_xmlsitemap_mark_sitemaps_to_be_regenerated();
+  }
+}
+
+/**
+ * Implements hook_node_type_delete().
+ */
+function tp_xmlsitemap_node_type_delete($info) {
+  // Remove the Content Type from SST config.
+  tp_xmlsitemap_remove_config_entry('tp_xmlsitemap_saved_content_types', $info->type);
+  tp_xmlsitemap_mark_sitemaps_to_be_regenerated();
+}
+
+/**
+ * Implements hook_menu_insert().
+ */
+function tp_xmlsitemap_menu_insert($menu) {
+  // Don't include an exlcuded menu.
+  $excluded_menus = tp_xmlsitemap_get_excluded_menus();
+  if (in_array($menu['menu_name'], $excluded_menus)) {
+    return;
+  }
+
+  // Automatically add new menu entry to SST config on creation.
+  tp_xmlsitemap_add_new_config_entry('tp_xmlsitemap_saved_menus', $menu['menu_name']);
+  tp_xmlsitemap_mark_sitemaps_to_be_regenerated();
+}
+
+/**
+ * Implements hook_menu_delete().
+ */
+function tp_xmlsitemap_menu_delete($menu) {
+  // Remove the menu entry from SST config.
+  tp_xmlsitemap_remove_config_entry('tp_xmlsitemap_saved_menus', $menu['menu_name']);
+  tp_xmlsitemap_mark_sitemaps_to_be_regenerated();
+}
+
+/**
+ * Implements hook_menu_link_insert().
+ */
+function tp_xmlsitemap_menu_link_insert($link) {
+  $menu_names = variable_get('tp_xmlsitemap_saved_menus', array());
+  if (in_array($link['menu_name'], $menu_names)) {
+    tp_xmlsitemap_mark_sitemaps_to_be_regenerated();
+  }
+}
+
+/**
+ * Implements hook_menu_link_delete().
+ */
+function tp_xmlsitemap_menu_link_delete(array $link) {
+  $menu_names = variable_get('tp_xmlsitemap_saved_menus', array());
+  if (in_array($link['menu_name'], $menu_names)) {
+    tp_xmlsitemap_mark_sitemaps_to_be_regenerated();
+  }
+}
+
+/**
+ * Implements hook_taxonomy_vocabulary_insert().
+ */
+function tp_xmlsitemap_taxonomy_vocabulary_insert(stdClass $vocabulary) {
+  tp_xmlsitemap_add_new_config_entry('tp_xmlsitemap_saved_taxonomies', $vocabulary->machine_name);
+  tp_xmlsitemap_mark_sitemaps_to_be_regenerated();
+}
+
+/**
+ * Implements hook_taxonomy_vocabulary_delete().
+ */
+function tp_xmlsitemap_taxonomy_vocabulary_delete(stdClass $vocabulary) {
+  tp_xmlsitemap_remove_config_entry('tp_xmlsitemap_saved_taxonomies', $vocabulary->machine_name);
+  tp_xmlsitemap_mark_sitemaps_to_be_regenerated();
+}
+
+/**
+ * Implements hook_taxonomy_term_insert().
+ */
+function tp_xmlsitemap_taxonomy_term_insert(stdClass $term) {
+  $vocabularies = variable_get('tp_xmlsitemap_saved_taxonomies', array());
+  if (in_array($term->vocabulary_machine_name, $vocabularies)) {
+    tp_xmlsitemap_mark_sitemaps_to_be_regenerated();
+  }
+}
+
+/**
+ * Implements hook_taxonomy_term_delete().
+ */
+function tp_xmlsitemap_taxonomy_term_delete(stdClass $term) {
+  $vocabularies = variable_get('tp_xmlsitemap_saved_taxonomies', array());
+  if (in_array($term->vocabulary_machine_name, $vocabularies)) {
+    tp_xmlsitemap_mark_sitemaps_to_be_regenerated();
+  }
+}
+
+/**
+ * Add new entry to a config variable.
+ *
+ * The variable must store only an unidimensional array.
+ *
+ * @param string $variable
+ *   The Drupal variable name.
+ * @param string $entry
+ *   The config entry value.
+ */
+function tp_xmlsitemap_add_new_config_entry($variable, $entry) {
+  $config_items = variable_get($variable, array());
+
+  array_push($config_items, $entry);
+  variable_set($variable, $config_items);
+}
+
+/**
+ * Remove entry from a config variable.
+ *
+ * The variable must store only an unidimensional array.
+ *
+ * @param string $variable
+ *   The Drupal variable name.
+ * @param string $entry
+ *   The config entry to be removed from array.
+ */
+function tp_xmlsitemap_remove_config_entry($variable, $entry) {
+  $config_items = variable_get($variable, array());
+
+  $entry_key = array_search($entry, $config_items);
+
+  if ($entry_key === FALSE) {
+    return FALSE;
+  }
+
+  unset($config_items[$entry_key]);
+  variable_set($variable, $config_items);
+}
+
+/**
+ * Implements hook_xmlsitemap_context_info().
+ */
+function tp_xmlsitemap_xmlsitemap_context_info() {
+  return array(
+    'tp_sst' => array(
+      'label'            => t('Travelopedia Screenshot Tool'),
+      'summary callback' => 'tp_xmlsitemap_sst_context_summary',
+    ),
+  );
+}
+
+/**
+ * Implements hook_xmlsitemap_context().
+ */
+function tp_xmlsitemap_xmlsitemap_context() {
+  $context = array('tp_sst' => FALSE);
+
+  if (!empty($_GET['tp_sst'])) {
+    $context['tp_sst'] = TRUE;
+  }
+
+  return $context;
+}
+
+/**
+ * Implements hook_xmlsitemap_context_url_options().
+ */
+function tp_xmlsitemap_xmlsitemap_context_url_options(array $context) {
+  $options = array();
+
+  if (!empty($context['tp_sst'])) {
+    $options['query']['tp_sst'] = 1;
+  }
+
+  return $options;
+}
+
+/**
+ * Implements hook_xmlsitemap_element_alter().
+ */
+function tp_xmlsitemap_xmlsitemap_element_alter(&$element, $link, $sitemap) {
+  if (empty($sitemap->context['tp_sst'])) {
+    return;
+  }
+
+  $parts = drupal_parse_url($element['loc']);
+
+  // Removes the context querystring from links in the sitemap.
+  if (!empty($parts['query']['tp_sst'])) {
+    unset($parts['query']['tp_sst']);
+  }
+
+  // Add 'drupal_auth=1' query string to the URL if the path is not accessible
+  // by anonymous user.
+  if (!$link['access'] || !$link['status']) {
+    $parts['query']['drupal_auth'] = 1;
+  }
+
+  $options = array(
+    'query' => $parts['query'],
+    'absolute' => TRUE,
+  );
+  $element['loc'] = url($parts['path'], $options);
+}
+
+/**
+ * Context summary callback.
+ */
+function tp_xmlsitemap_sst_context_summary($value) {
+  return $value ? 'Active' : 'Not active';
+}
+
+/**
+ * Implements hook_query_xmlsitemap_generate_alter().
+ */
+function tp_xmlsitemap_query_xmlsitemap_generate_alter(QueryAlterableInterface $query) {
+  $sitemap = $query->getMetaData('sitemap');
+
+  // Skip Travelopedia conditions if is not tp_sst context.
+  if (!isset($sitemap->context['tp_sst']) || !$sitemap->context['tp_sst']) {
+    $condition = db_or();
+
+    $menus = array();
+    if (module_exists('xmlsitemap_menu')) {
+      $menus = xmlsitemap_get_link_type_enabled_bundles('menu_link');
+    }
+
+    $vocabularies = array();
+    if (module_exists('xmlsitemap_taxonomy')) {
+      $vocabularies = xmlsitemap_get_link_type_enabled_bundles('taxonomy_term');
+    }
+
+    $node_types = xmlsitemap_get_link_type_enabled_bundles('node');
+
+    $subtypes = array_merge($node_types, $menus, $vocabularies);
+    if ($subtypes) {
+      $condition->condition('subtype', $subtypes, 'IN');
+    }
+
+    $condition->condition('type', 'frontpage');
+    $query->condition($condition);
+
+    return;
+  }
+
+  // Removes conditions based on access.
+  $conditions =& $query->conditions();
+  foreach ($conditions as $i => $condition) {
+    if (isset($condition['field']) && ($condition['field'] == 'x.status' || $condition['field'] == 'x.access')) {
+      unset($conditions[$i]);
+    }
+  }
+
+  // Defines the extra query conditions.
+  $condition = db_or();
+
+  $allowed_types = variable_get('tp_xmlsitemap_saved_content_types');
+  if (!empty($allowed_types)) {
+    $node_condition = db_and();
+    $node_condition->condition('type', 'node');
+    $node_condition->condition('subtype', $allowed_types, 'IN');
+    $node_condition->condition('loc', '%\%%', 'NOT LIKE');
+
+    // Ensures that the Sitemap will not contain unpublished nodes.
+    $unpublished_nodes_query = db_select('xmlsitemap', 'x');
+    $unpublished_nodes_query->join('node', 'n', 'x.id = n.nid');
+    $unpublished_nodes_query->condition('x.type', 'node');
+    $unpublished_nodes_query->condition('x.subtype', $allowed_types, 'IN');
+    $unpublished_nodes_query->condition('n.status', NODE_NOT_PUBLISHED);
+    $unpublished_nodes_query->fields('x', array('id'));
+
+    $unpublished_nodes = $unpublished_nodes_query->execute()->fetchCol();
+    if ($unpublished_nodes) {
+      $node_condition->condition('id', $unpublished_nodes, 'NOT IN');
+    }
+
+    $condition->condition($node_condition);
+  }
+
+  $allowed_menus = variable_get('tp_xmlsitemap_saved_menus');
+  if (module_exists('xmlsitemap_menu') && !empty($allowed_menus)) {
+    $menu_condition = db_and();
+    $menu_condition->condition('type', 'menu_link');
+    $menu_condition->condition('loc', '%http%', 'NOT LIKE');
+    $menu_condition->condition('loc', '%\%%', 'NOT LIKE');
+    $menu_condition->condition('loc', '%node/%', 'NOT LIKE');
+    $menu_condition->condition('subtype', $allowed_menus, 'IN');
+    $condition->condition($menu_condition);
+  }
+
+  $allowed_vocabs = variable_get('tp_xmlsitemap_saved_taxonomies');
+  if (module_exists('xmlsitemap_taxonomy') && !empty($allowed_vocabs)) {
+    $vocab_condition = db_and();
+    $vocab_condition->condition('type', 'taxonomy_term');
+    $vocab_condition->condition('subtype', $allowed_vocabs, 'IN');
+    $vocab_condition->condition('loc', '%\%%', 'NOT LIKE');
+    $condition->condition($vocab_condition);
+  }
+
+  // Ensures that the frontpage link will always be included.
+  $condition->condition('type', 'frontpage');
+
+  // Set conditions defined above.
+  $query->condition($condition);
+
+  // Ensures that the Sitemap will not contain duplicated entries.
+  $alias = db_select('xmlsitemap', 'x');
+  $alias->join('url_alias', 'a', 'x.loc = a.alias');
+  $alias->fields('x', array('loc'))
+    ->execute();
+
+  $links_aliases_sources = $alias->execute()->fetchCol();
+  if ($links_aliases_sources) {
+    $alias_condition = db_and();
+    $alias_condition->condition('loc', $links_aliases_sources, 'NOT IN');
+    $query->condition($alias_condition);
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function tp_xmlsitemap_form_xmlsitemap_sitemap_delete_form_alter(&$form, $form_state) {
+  if (!empty($form['#sitemap']->context['tp_sst'])) {
+    drupal_set_message(t('Travelopedia SST Sitemap cannot be deleted.'), 'warning');
+    drupal_goto('admin/config/search/xmlsitemap');
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * This hook implementation is needed to actually enable the context and make it
+ * possible to configure it.
+ */
+function tp_xmlsitemap_form_xmlsitemap_sitemap_edit_form_alter(&$form, $form_state) {
+  $form['context']['tp_sst'] = array(
+    '#type'          => 'checkbox',
+    '#disabled'      => tp_xmlsitemap_is_sst_sitemap_created(),
+    '#title'         => t('Travelopedia Screenshot Tool'),
+    '#description'   => t('Check this to indicate that this sitemap will be used by the Travelopedia Screenshot Tool.'),
+    '#default_value' => isset($form['#sitemap']->context['tp_sst']) ? $form['#sitemap']->context['tp_sst'] : FALSE,
+  );
+}
+
+/**
+ * Returns a list of excluded menus.
+ */
+function tp_xmlsitemap_get_excluded_menus() {
+  $default_menus = array(
+    'acquia-lift-controls',
+    'shortcut-set-1',
+    'devel',
+    'management',
+    'navigation',
+    'user',
+    'user-menu',
+    'visitor-actions-controls',
+    'features',
+  );
+
+  $menus = variable_get('tp_xmlsitemap_excluded_menus', $default_menus);
+
+  return $menus;
+}
+
+/**
+ * Indexes nodes.
+ *
+ * @param int $batch_limit
+ *   The batch limit value.
+ */
+function tp_xmlsitemap_index_nodes($batch_limit) {
+  if (!module_exists('xmlsitemap_node')) {
+    return FALSE;
+  }
+
+  $node_types = variable_get('tp_xmlsitemap_saved_content_types');
+  if (!$node_types) {
+    return FALSE;
+  }
+
+  $sql = "SELECT n.nid FROM {node} n LEFT JOIN {xmlsitemap} x ON x.type = 'node' AND n.nid = x.id WHERE x.id IS NULL AND n.type IN (:types) ORDER BY n.nid DESC";
+  $nids = db_query_range($sql, 0, $batch_limit, array(':types' => $node_types))->fetchCol();
+  if (!$nids) {
+    return FALSE;
+  }
+
+  xmlsitemap_node_xmlsitemap_process_node_links($nids);
+  tp_xmlsitemap_mark_sitemaps_to_be_regenerated();
+}
+
+/**
+ * Indexes menus.
+ *
+ * @param int $batch_limit
+ *   The batch limit value.
+ */
+function tp_xmlsitemap_index_menus($batch_limit) {
+  if (!module_exists('xmlsitemap_menu')) {
+    return FALSE;
+  }
+
+  $menu_names = variable_get('tp_xmlsitemap_saved_menus');
+  if (!$menu_names) {
+    return FALSE;
+  }
+
+  $sql = "SELECT m.mlid FROM {menu_links} m LEFT JOIN {xmlsitemap} x ON x.type = 'menu_link' AND m.mlid = x.id WHERE x.id IS NULL AND m.menu_name IN (:menus) ORDER BY m.mlid DESC";
+  $mlids = db_query_range($sql, 0, $batch_limit, array(':menus' => $menu_names))->fetchCol();
+  if (!$mlids) {
+    return FALSE;
+  }
+
+  xmlsitemap_menu_xmlsitemap_process_menu_links($mlids);
+  tp_xmlsitemap_mark_sitemaps_to_be_regenerated();
+}
+
+/**
+ * Indexes taxonomies.
+ *
+ * @param int $batch_limit
+ *   The batch limit value.
+ */
+function tp_xmlsitemap_index_taxonomies($batch_limit) {
+  if (!module_exists('xmlsitemap_taxonomy')) {
+    return FALSE;
+  }
+
+  $taxonomies = variable_get('tp_xmlsitemap_saved_taxonomies');
+  if (!$taxonomies) {
+    return FALSE;
+  }
+
+  $sql = "SELECT t.tid FROM {taxonomy_term_data} t INNER JOIN {taxonomy_vocabulary} tv USING (vid) LEFT JOIN {xmlsitemap} x ON x.type = 'taxonomy_term' AND t.tid = x.id WHERE x.id IS NULL AND tv.machine_name IN (:bundles) ORDER BY t.tid DESC";
+  $tids = db_query_range($sql, 0, $batch_limit, array(':bundles' => $taxonomies))->fetchCol();
+  if (!$tids) {
+    return FALSE;
+  }
+
+  xmlsitemap_taxonomy_xmlsitemap_process_taxonomy_term_links($tids);
+  tp_xmlsitemap_mark_sitemaps_to_be_regenerated();
+}
+
+/**
+ * Mark the sitemaps to be regenerated on next cron.
+ */
+function tp_xmlsitemap_mark_sitemaps_to_be_regenerated() {
+  if (!variable_get('xmlsitemap_regenerate_needed')) {
+    variable_set('xmlsitemap_regenerate_needed', TRUE);
+  }
+}
+
+/**
+ * Deletes the Sitemap link indexes.
+ */
+function tp_xmlsitemap_delete_index_links() {
+  db_delete('xmlsitemap')->execute();
+}
+
+/**
+ * Indexes nodes, menus and taxnomies links incrementally.
+ */
+function tp_xmlsitemap_index_links() {
+  $batch_limit = variable_get('tp_xmlsitemap_batch_limit', 100);
+
+  tp_xmlsitemap_index_nodes($batch_limit);
+  tp_xmlsitemap_index_menus($batch_limit);
+  tp_xmlsitemap_index_taxonomies($batch_limit);
+}
+
+/**
+ * Checks if Travelopedia SST Sitemap is created.
+ *
+ * @return bool
+ *   Returns TRUE in case of success, FALSE otherwise.
+ */
+function tp_xmlsitemap_is_sst_sitemap_created() {
+  $tp_sst = db_query("SELECT smid FROM {xmlsitemap_sitemap}
+    WHERE context LIKE '%s:10:\"tp_sst\";b:1;%'
+       OR context LIKE '%s:10:\"tp_sst\";i:1;%'")->fetchCol();
+
+  if (!empty($tp_sst)) {
+    return TRUE;
+  }
+
+  return FALSE;
+}
+
+/**
+ * Deletes non-configured sitemaps.
+ */
+function tp_xmlsitemap_delete_non_configured_sitemaps() {
+  // Is defined as non-configured Sitemap when it have only the frontpage link.
+  db_delete('xmlsitemap_sitemap')
+    ->condition('links', 1)
+    ->condition('context', '%s:10:"tp_sst";b:1;%', 'NOT LIKE')
+    ->condition('context', '%s:10:"tp_sst";i:1;%', 'NOT LIKE')
+    ->execute();
+}
