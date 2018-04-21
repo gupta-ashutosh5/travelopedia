@@ -1,9 +1,0 @@
-name = Travelopedia XML Sitemap
-description = Generates an XML sitemap of all published content
-package = TP Base Features
-core = 7.x
-version = 7.x-1.2.0
-project = tp_xmlsitemap
-configure = admin/config/search/tp_xmlsitemap
-
-dependencies[] = xmlsitemap_node (>=2.x)
