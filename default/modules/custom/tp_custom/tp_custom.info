@@ -1,0 +1,8 @@
+name = Travelopedia Custom
+description = Module for custom functionality development.
+package = Custom
+core = 7.x
+;files[] = jquery_update.module
+;files[] = jquery_update.install
+
+

@@ -1,0 +1,109 @@
+﻿.wgtfrmbox, .wgtfrmbox *, .wgtpop, .wgtpop *{box-sizing:border-box;}
+.fright{float:right;}
+.error_msg{border-radius:3px; padding:5px; margin:0 0 5px; text-align:center; float:left; width:100%; }
+.greybg{left:0; top:0; position:fixed; width:100%; height:100%; z-index:9; background:rgba(0,0,0,.7); display:none;}
+.wgtpopbox{position: fixed; top: 0; left: 0; right: 0; width: 90%; font-family: sans-serif; z-index: 10; max-width: 580px;  margin: auto; height:100%; overflow:auto;}
+.wgtpop{background: white; border: 5px solid #c7c7c7; border-radius: 15px; float: left; padding: 15px; text-align: center; width: 100%;}
+.wgtpop b{font-family:sans-serif; font-size:18px; font-weight:normal; color:#555; padding:15px 0; display:block;}
+.wgtpoplogo{display:block; width:100%; text-align:center; padding:10px;}
+
+
+/**-----common form for all --------*/
+.wgtfrmbox{width:100%; max-width:400px; float:left; background:#f7f7f7; border:1px solid #d7d7d7; border-radius:5px; padding:15px; font-size:12px; position:relative; font-family: arial, sans-serif;}
+.wgtfrmrow{width:100%; float:left; margin-bottom:8px;  font-family:sans-serif;}
+.wgtfrmleft, .wgtfrmright{width:calc(100% / 2 - 8px); float:left; margin-left:15px;}
+.wgtfrmleft{margin-left:0px;}
+.wgtfrmleft label, .wgtfrmright label, .wgtpaxbox label, .wgtclass label{width:100%; float:left; padding:5px 0;}
+.wgtfrmbox input[type="text"], .wgtfrmbox select{width:100%; float:left; padding:8px; background:#fff; border:1px solid #d8d8d8; font-size:12px; color:#555;}
+.wgtcal{background:#fff url(../images/cal.png) no-repeat 97% center !important; cursor:pointer;}
+.wgtsearchbtn{cursor:pointer; border-radius:5px; background:linear-gradient(#035697, #054f88); color:#fff; font-size:16px; padding:8px; display:inline-block; text-decoration:none;}
+.wgtsearchbtn:hover{background:linear-gradient(#eeb407, #fbbf0e);}
+
+/*flight*/
+.wgt_flightnav{width:100%; float:left; margin:0 0 15px; padding:0;}
+.wgt_flightnav li{padding:0; margin:0; list-style:none; float:left; background:#035697; margin-right:1px; font-size:14px;}
+.wgt_flightnav li a{padding:8px; color:#fff; text-decoration:none; display:inline-block;  font-family:sans-serif;}
+.wgt_flightnav li.selected, .wgt_flightnav li:hover{background:#fbbf0e;}
+.wgt_flightnav li.selected  a, .wgt_flightnav li a:hover{color:#333;}
+
+.wgtcountbox{float:left; width:100%; font-weight:bold; margin:8px 0 0; color:#ff0000; font-size:11px;}
+.wgtpaxbox{width:calc(100% / 3 - 10px); margin-left:15px; float:left;}
+.wgtpaxbox:first-of-type{margin-left:0;}
+.wgtclass, .wgtmultirow{width:100%; float:left; margin-bottom:3px;}
+
+.wgtfltno{width:10%; float:left; font-weight:bold; font-size:10px;}
+.wgtmltdest{float:left; width:25%; margin-left:8px; }
+.wgtmltfltdel{width:5%; float:left; padding:5px;}
+.wgtaddflt{float:right; padding:5px 8px; background:#B4212B; color:#fff; border-radius:3px; text-decoration:none;}
+
+
+/*================ common css for All ===================*/
+
+.error_heading { width: 100%; float: left; margin: 0px; color: #333; font-weight: bold; text-align: center; padding-bottom: 5px; padding-top: 5px; background: #D2E5F3; }
+.error_heading span { margin: 0px; padding: 3px 10px; color: #010101; }
+.error_msg{font-size:12px; font-weight:normal;background:#fae6bb; color:#df0606; border:1px solid #efae79;  border-radius:6px; padding: 8px;}
+ 
+ /*calender UI set*/
+.searching_container{ position:relative; width:100%;}
+.searching_container .inner_container{ text-align:center; width:50%; margin:28px auto; border:2px solid $mainborder; border-radius:8px; -ms-border-radius:8px; -webkit-border-radius:8px; box-shadow:2px 1px 5px #c0c0c0;background-color: #FFFFFF; -webkit-box-shadow: #B3B3B3 2px 2px 2px;-moz-box-shadow: #B3B3B3 2px 2px 2px; box-shadow: #B3B3B3 2px 2px 2px;}
+.searching_container .inner_container .searching_logo{ margin:30px 0;}
+.searching_container .inner_container h1{ font-size:18px; padding:15px 0 10px; color:#000; float:left; margin:3px 0; font-weight:bold; width:100%;}
+.searching_container .inner_container h2{ font-size:18px; color:#000; clear:both; text-align:center;}
+.searching_container .inner_container p{ color:#fff; background:$btnbg; font-size:16px; float:left; width:100%; margin:30px auto; line-height:30px; font-weight:bold;}
+.searching_container .inner_container p span{ display:block; float:left; text-align:center;border-right:1px solid #fff; line-height:29px; padding:10px 0; }
+.searching_container .inner_container p span b{ color:#fff;}
+
+/******************************************************Calender UI *********************************************/
+.ui-datepicker {width: 22em;padding: .2em .2em 0;display: none;border: 1px solid #aaaaaa;background: #ffffff url(../images/ui-bg_flat_75_ffffff_40x100.png) 50% 50% repeat-x;color: #222222;font-family: Verdana,Arial,sans-serif;font-size: 1.1em;}
+.ui-datepicker .ui-datepicker-header {background:$btnbg;color: #FFFFFF;font-weight: bold;padding: 0.2em 0;position: relative;}
+.ui-widget { font-family: Verdana,Arial,sans-serif; font-size: 11px; }
+.ui-widget-header .ui-icon {background-image: url("../HolidayPackageImages/add_icon.gif");}
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {background:#E6E6E6; border:1px solid #d3d3d3; color:$btnbg-hover;font-weight: normal;}
+.ui-slider-handle{ background:$maincolor!important}
+.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {background: url("images/ui-bg_glass_65_ffffff_1x400.png") repeat-x scroll 50% 50% #FBF9EE; border: 1px solid $mainborder;color: #212121;font-weight: normal;}
+.ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight{background: none repeat scroll 0 0 #FBF9EE;border: 1px solid #F6AE38;color: #363636;}
+.ui-state-hover .ui-icon, .ui-sate-focus .ui-icon{background-image: url("../HolidayPackageImages/add_icon.gif");}
+.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active{/*background: url("../HolidayPackageImages/add_icon.gif") no-repeat scroll 50% 50% transparent;*/}
+.ui-datepicker th {padding: .7em .3em;text-align: center;font-weight: bold;background-color: #E8E8E8;border-style: none none solid;border-width: 0 0 1px;border-color: #A7A7A7;}
+.ui-icon {width: 16px;height: 16px;display: block;text-indent: -99999px;overflow: hidden;background-repeat: no-repeat;}
+.ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus {background: none repeat scroll 0 0 #FBF9EE; border: 1px solid $mainaltcolor;color:$maincolor;}
+.ui-widget-content .ui-icon {background-image: url(../images/pre_next.png)/*{iconsContent}*/; }
+.ui-slider-handle{ -moz-border-radius:14px/*{cornerRadius}*/; -webkit-border-radius: 14px/*{cornerRadius}*/; border-radius: 14px/*{cornerRadius}*/;}
+ 
+ @media screen and (max-width:767px)
+{
+.mainlogo>img{max-width:100%;}
+.wgtfrmleft, .wgtfrmright{width:100%; margin-left:0;}
+.wgtfrmleft {margin-bottom: 8px;}
+	
+.wgt_flightnav li {width: 48.9%;width: calc(100% / 2 - 2px); margin-bottom:1px;}
+.wgt_flightnav li:nth-child(2n+2){margin-left:1px;}
+/*flight popup*/
+.popboxsize{width:310px; max-width:550px; margin-left: -155px; top:220px;}
+.flightpopup{height:auto;}
+#specialReturnFares{margin-top:10px;}
+#originalSearch{ margin-right:0;}
+/*calender part*/
+#ui-datepicker-div{ width:88% !important; left:4% !important; top:43% !important}
+.ui-datepicker-multi-2 .ui-datepicker-group,.ui-datepicker-multi .ui-datepicker-group table{ width:100%!important;}
+.ui-datepicker td span, .ui-datepicker td a { padding:.2em; font-size:16px; font-weight:bold!important; text-align:center;}
+.ui-datepicker .ui-datepicker-title, .ui-datepicker th{ font-size:1.2em;}
+.ui-datepicker-multi .ui-datepicker-group table{ width:100%;}
+.searching_container .inner_container{ width:94%;}
+.wgtsearchbtn{display:block;}
+}
+@media (min-width:768px) and (max-width:991px)
+{
+.login_popup_module{right: 20%;width:60%;}
+.forgot_pwd_popup{ width:45%; left:25%;}
+}
+@media (min-width:992px) and (max-width:1024px)
+{
+.login_popup_module{right:30%;width:40%;}
+.forgot_pwd_popup{ width:40%; left:30%;}
+ }
+
+
+
+
+

@@ -1,0 +1,13 @@
+name = TP Mforms
+description = "Multistep form to get data on home page"
+core = 7.x
+package = DEV tools
+
+dependencies[] = mforms
+stylesheets[all][] = tp_mforms.css
+; Information added by drupal.org packaging script on 2012-06-05
+version = "7.x-1.0"
+core = "7.x"
+project = "mforms"
+datestamp = "1338882388"
+
